@@ -1,0 +1,13 @@
+server {
+    listen 80;
+    server_name farmbox.ca *.farmbox.ca;
+
+    access_log /var/log/nginx/farmbox.ca.access.log;
+    error_log /var/log/nginx/farmbox.ca.error.log;
+
+    root /var/www/;
+
+    index index.html;
+
+    return 302 https://www.theorganicbox.ca/farmbox/;
+}

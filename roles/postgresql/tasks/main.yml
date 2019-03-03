@@ -1,0 +1,27 @@
+---
+- name: Install postgresql
+  apt:
+    name: postgresql
+    state: latest
+  notify:
+    - start postgresql
+
+- name: Postgresql auth connection settings
+  copy:
+    src: etc/postgresql/10/main/pg_hba.conf
+    dest: /etc/postgresql/10/main/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: 0640
+  notify:
+    - restart postgresql
+
+- name: Postgresql settings
+  copy:
+    src: etc/postgresql/10/main/postgresql.conf
+    dest: /etc/postgresql/10/main/postgresql.conf
+    owner: postgres
+    group: postgres
+    mode: 0640
+  notify:
+    - restart postgresql

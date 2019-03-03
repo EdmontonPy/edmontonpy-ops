@@ -1,0 +1,87 @@
+---
+- name: Install dependencies
+  apt:
+    name:
+      - git
+      - python3
+      - python3-pip
+      - npm
+    state: latest
+
+- name: Install python packages
+  pip:
+    name:
+      - pip==18.0
+      - pipenv
+    state: latest
+
+- name: Git clone the remote repo
+  git:
+    accept_hostkey: yes
+    depth: 1
+    dest: /opt/edmontonpy
+    force: yes
+    repo: https://github.com/EdmontonPy/edmontonpy.git
+    version: master
+  notify:
+    - reload uwsgi
+
+- name: Install edmontonpy
+  command: pipenv sync
+  args:
+    chdir: /opt/edmontonpy
+    creates: /opt/edmontonpy/.venv
+  environment:
+    PIPENV_VENV_IN_PROJECT: true
+
+- name: Copy over local_settings.py
+  template:
+    src: "opt/edmontonpy/edmontonpy/settings/local_settings.py"
+    dest: "/opt/edmontonpy/edmontonpy/settings/local_settings.py"
+    owner: root
+    group: www-data
+    mode: 0644
+
+- name: Install npm dependencies
+  command: npm install
+  args:
+    chdir: /opt/edmontonpy
+
+- name: Compile style.css
+  command: npm run dist
+  args:
+    chdir: /opt/edmontonpy
+
+- name: Set file owners
+  file:
+    path: /opt/edmontonpy
+    state: directory
+    owner: root
+    group: www-data
+    recurse: true
+
+- name: Create the static folder
+  file:
+    path: /var/www/www.edmontonpy.com/static
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: Collect static files
+  command: pipenv run manage.py collectstatic --noinput
+  args:
+    chdir: /opt/edmontonpy
+
+- name: Set file owners for static files
+  file:
+    recurse: true
+    path: /var/www/www.edmontonpy.com
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Migrate
+  command: pipenv run manage.py migrate
+  args:
+    chdir: /opt/edmontonpy

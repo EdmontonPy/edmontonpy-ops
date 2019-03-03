@@ -1,0 +1,74 @@
+---
+- name: Install Monit
+  apt:
+    name:
+      - monit
+    state: latest
+
+- name: Get monit's verison
+  shell: "monit --version | grep 'version' | awk -F 'version ' '{print $2}'"
+  register: monit_version
+  changed_when: false
+
+- name: Monit configs
+  template:
+    src: etc/monit/monitrc
+    dest: /etc/monit/monitrc
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - restart monit
+
+- name: Monit openssh-server
+  copy:
+    src: etc/monit/conf.d/{{ item }}
+    dest: /etc/monit/conf.d/{{ item }}
+    owner: root
+    group: root
+    mode: 0640
+  with_items:
+    - filesystem
+    - openssh-server
+    - system
+  notify:
+    - reload monit
+
+- name: Setup the ubuntu user
+  user:
+    name: ubuntu
+    shell: /bin/bash
+    state: present
+
+- name: Set bashrc file
+  copy:
+    src: home/ubuntu/.bashrc
+    dest: /home/ubuntu/.bashrc
+    owner: ubuntu
+    group: ubuntu
+    mode: 0644
+
+- name: Create ubuntu ssh directory
+  file:
+    path: /home/ubuntu/.ssh
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0700
+
+- name: Setup password less login
+  authorized_key:
+    user: ubuntu
+    state: present
+    key: https://github.com/{{ item }}.keys
+  with_items: "{{ users }}"
+
+- name: Setup password less sudo
+  copy:
+    src: etc/sudoers.d/90-cloudimg-ubuntu
+    dest: /etc/sudoers.d/90-cloudimg-ubuntu
+    owner: root
+    group: root
+    mode: 0440
+  notify:
+    - restart sudo

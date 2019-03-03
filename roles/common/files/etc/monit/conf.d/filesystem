@@ -1,0 +1,12 @@
+###############################################################################
+## Resources Monit control file
+###############################################################################
+## Check filesystem permissions, uid, gid, space and inode usage. Other services,
+## such as databases, may depend on this resource and an automatically graceful
+## stop may be cascaded to them before the filesystem will become full and data
+## lost.
+#
+check filesystem rootfs with path /
+  group system
+  if space usage > 80% for 5 times within 15 cycles then alert
+  if inode usage > 80% for 5 times within 15 cycles then alert

@@ -1,0 +1,18 @@
+---
+- hosts: webserver
+  remote_user: "{{ remote_user }}"
+  become: true
+  gather_facts: False
+  pre_tasks:
+    - name: Install Python for Ansible
+      raw: bash -c "test -e /usr/bin/python3 || (apt -y update && apt install -y python3)"
+      register: output
+      changed_when:
+        - output.stdout != ""
+        - output.stdout != "\r\n"
+    - name: Gather facts
+      setup:
+  vars_files:
+    - vars/edmontonpy-secure.yml
+  roles:
+    - webserver

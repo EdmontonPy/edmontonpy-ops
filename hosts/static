@@ -1,0 +1,8 @@
+[local]
+localhost
+
+[database]
+149.248.50.55
+
+[webserver]
+149.248.50.55

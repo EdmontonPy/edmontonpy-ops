@@ -1,0 +1,7 @@
+---
+- name: Install uwsgi
+  apt:
+    name:
+      - uwsgi
+      - uwsgi-plugin-python3
+    state: latest

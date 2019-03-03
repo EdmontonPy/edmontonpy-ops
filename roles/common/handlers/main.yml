@@ -1,0 +1,24 @@
+---
+- name: reload monit
+  service:
+    name: monit
+    state: reloaded
+    enabled: yes
+
+- name: restart monit
+  service:
+    name: monit
+    state: restarted
+    enabled: yes
+
+- name: restart sudo
+  service:
+    name: sudo
+    state: restarted
+    enabled: yes
+
+- name: restart sshd
+  service:
+    name: ssh
+    state: restarted
+    enabled: yes

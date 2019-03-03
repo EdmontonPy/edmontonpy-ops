@@ -1,0 +1,7 @@
+# Ansible files
+*.retry
+
+# Distribution / packaging
+*.egg-info/
+.eggs/
+node_modules
