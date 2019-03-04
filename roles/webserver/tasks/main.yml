@@ -19,19 +19,25 @@
 
 - name: Copy over nginx configs
   template:
-    src: etc/nginx/sites-available/www.edmontonpy.com
-    dest: /etc/nginx/sites-available/www.edmontonpy.com
+    src: "etc/nginx/sites-available/{{ item }}"
+    dest: "/etc/nginx/sites-available/{{ item }}"
     owner: root
     group: root
     mode: 0644
+  with_items:
+    - www.edmontonpy.com
+    - root_redirect
   notify:
     - reload nginx
 
 - name: Enable nginx configs
   file:
-    src: /etc/nginx/sites-available/www.edmontonpy.com
-    dest: /etc/nginx/sites-enabled/www.edmontonpy.com
+    src: "/etc/nginx/sites-available/{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item }}"
     state: link
+  with_items:
+    - www.edmontonpy.com
+    - root_redirect
   notify:
     - reload nginx
 

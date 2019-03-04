@@ -1,5 +1,6 @@
 # Ansible files
 *.retry
+.vault-password-file
 
 # Distribution / packaging
 *.egg-info/
