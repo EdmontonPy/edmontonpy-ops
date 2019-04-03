@@ -1,4 +1,11 @@
 ---
+
+- name: Create ssl certificates for www.edmontonpy.com
+  command: certbot --nginx certonly -d www.edmontonpy.com -n
+  args:
+    creates: /etc/letsencrypt/live/www.edmontonpy.com/privkey.pem
+  become: true
+
 - name: Copy over uwsgi webserver configs
   template:
     src: etc/uwsgi/apps-available/www.edmontonpy.com.ini
