@@ -1,0 +1,18 @@
+---
+- name: Install software-properties-common
+  apt:
+    name: software-properties-common
+    state: latest
+
+- name: Add certbot repository
+  apt_repository:
+    repo: ppa:certbot/certbot
+    state: present
+
+- name: Install certbot
+  apt:
+    name:
+      - certbot
+      - python-certbot-nginx
+    state: latest
+    update_cache: yes
