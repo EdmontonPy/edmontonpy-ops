@@ -9,3 +9,5 @@ DATABASES = {
 }
 
 STATIC_ROOT = '/var/www/www.edmontonpy.com/static/'
+
+SECRET_KEY = '{{ secret_key }}'
