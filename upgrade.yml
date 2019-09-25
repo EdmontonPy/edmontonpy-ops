@@ -1,7 +1,5 @@
 ---
 - hosts: all:!localhost
-  remote_user: "{{ remote_user }}"
-  become: true
   gather_facts: False
   pre_tasks:
     - name: Install Python for Ansible
