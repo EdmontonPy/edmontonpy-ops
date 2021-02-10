@@ -15,6 +15,6 @@ setup(
     description='Infrastructure for EdmontonPy',
     long_description=open(join(dirname(__file__), 'README.rst')).read(),
     install_requires=[
-        'ansible >= 2.7.12, < 3.0.0.0',
+        'ansible >= 2.10.5, < 3.0.0.0',
     ],
 )
